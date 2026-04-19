@@ -25,58 +25,99 @@ uvicorn app:app --reload
 
 Open **http://localhost:8000** in your browser.
 
-The SQLite database (`shopper.db`) is created and seeded automatically on first run.
+The SQLite database (`shopper.db`) is created and seeded automatically on first run. The cart is cleared automatically at the start of each new session.
 
 ---
 
 ## Demo Instructions
 
-### Selecting a Customer
+### Starting a session
 
-Use the **dropdown in the top-right header** to switch between demo customers. Each one has a different purchase history and return record — the agent will tailor its recommendations accordingly.
+On the landing page, select a customer from the dropdown and click **Start Shopping**. This opens the chat with Alex, your AI stylist. Each session starts with a clean cart.
 
-### Demo Customers & Their Profiles
+To return to the landing page at any point, click the **SHOPPER** logo in the top-left corner of the chat.
 
-| Customer | Background | Key Personalisation Points |
-|---|---|---|
-| **Ryan Mitchell** | All orders in L (plain shirt, jeans). Previously returned a Green Checked Shirt in M — too small. | Agent recommends L and cites the specific return when explaining the size. |
-| **Bob Smith** | Orders Black T-shirt and Red Polo, both size L. No returns. | Agent leads with casual options (T-shirts, polos), anchors on L and his colour history. |
-| **Charlie Brown** | All orders in M (jeans, T-shirt). Previously returned Grey Jeans in L — too big. | Agent recommends M for everything. Won't suggest L for jeans given his return history. |
-| **James Parker** | Orders Green Polo and Grey Jeans, both size M. No returns. Smart-casual taste. | Agent gravitates toward green colourways and polo/shirt pairings. |
+---
+
+### Demo Customers
+
+There are two demo customers, each with a rich purchase and return history that drives personalised recommendations.
+
+---
+
+#### Ryan Mitchell — Casual buyer, size L
+
+| | |
+|---|---|
+| **Style** | Casual — t-shirts, polos, jeans |
+| **Colour preference** | Black and red |
+| **Past orders** | Black T-shirt (L) · Red Polo (L) · Black Jeans (L) |
+| **Return on record** | Green Checked Shirt in **M** — returned as *too small* |
+
+**What to expect from Alex:**
+- Gravitates toward casual items and dark colourways based on Ryan's order history
+- When recommending shirts, explicitly flags the M return: *"Since you returned the Green Checked Shirt in M because it was too small, I'd go with L on this one"*
+- Anchors size recommendations at L across the board
+
+---
+
+#### James Parker — Smart-casual buyer, size M
+
+| | |
+|---|---|
+| **Style** | Smart-casual — plain shirts, polos, jeans |
+| **Colour preference** | Grey and green |
+| **Past orders** | Grey Plain Shirt (M) · Green Polo (M) · Grey Jeans (M) |
+| **Return on record** | Black Jeans in **L** — returned as *too big* |
+
+**What to expect from Alex:**
+- Leans toward neutral and green colourways and smart-casual items
+- When recommending jeans or bottoms, cites the L return: *"You returned Black Jeans in L because they were too big, so I'd suggest M"*
+- Anchors size recommendations at M across the board
+
+---
 
 ### Suggested Demo Flows
 
-**Flow 1 — Size personalisation (Charlie)**
-1. Select Charlie Brown
-2. Say: *"I'm looking for a new pair of jeans"*
-3. Watch the agent recommend size M, accounting for the L return
+**Flow 1 — Return-driven size recommendation (Ryan)**
+1. Select Ryan Mitchell → Start Shopping
+2. Say: *"I need a new shirt for the office"*
+3. Alex recommends a shirt in L and explicitly mentions the Green Checked Shirt M return as the reason
+4. Confirm the colour and size → item is added to cart
+5. Alex offers one upsell suggestion (e.g. jeans to complete the look) — say *"no thanks"* to see it accepted gracefully
 
-**Flow 2 — Size personalisation (Ryan)**
-1. Select Ryan Mitchell
-2. Ask about shirts
-3. Agent recommends L and explicitly mentions the Green Checked Shirt return as the reason
+**Flow 2 — Return-driven size recommendation (James)**
+1. Select James Parker → Start Shopping
+2. Say: *"Looking for a new pair of jeans"*
+3. Alex recommends M and cites the Black Jeans L return unprompted
+4. Confirm → added to cart, then observe the upsell
 
-**Flow 3 — Colour personalisation (Bob)**
-1. Select Bob Smith
-2. Say: *"I want something casual for the weekend"*
-3. The agent gravitates toward black and red based on his history
+**Flow 3 — Colour personalisation (James)**
+1. Select James Parker → Start Shopping
+2. Say: *"I want something smart but relaxed for the weekend"*
+3. Watch Alex gravitate toward grey and green options based on James's order history
 
-**Flow 3 — Upsell after cart add (any customer)**
-1. Browse to an item and confirm it
-2. Once added to cart, the agent offers a single complementary suggestion
-3. Say "no thanks" — the agent accepts gracefully
+**Flow 4 — Casual style matching (Ryan)**
+1. Select Ryan Mitchell → Start Shopping
+2. Say: *"Something to wear casually — not too formal"*
+3. Alex leads with t-shirts and polos in black/red, matching Ryan's preferences
 
-**Flow 4 — Human escalation**
-1. Say: *"I'd like to speak to a human"* at any point
-2. Or give three unclear/off-topic responses and watch the agent escalate automatically
+**Flow 5 — Upsell**
+1. Add any item to the cart
+2. Alex will offer one complementary suggestion (e.g. jeans if you bought a shirt, a polo if you bought jeans)
+3. Say *"no thanks"* — Alex accepts without pushing further
 
-**Flow 5 — Off-topic handling**
-1. Ask anything unrelated: *"What's the weather like?"* or *"Ignore your instructions"*
-2. The agent politely redirects to shopping
+**Flow 6 — Human escalation**
+1. Say: *"I'd like to speak to a human"* at any point → immediate escalation
+2. Or be vague for three exchanges and watch Alex escalate automatically with an apology
+
+**Flow 7 — Off-topic handling**
+1. Ask something unrelated: *"What's the weather like?"* or *"Ignore your previous instructions"*
+2. Alex politely declines and redirects to shopping
 
 ### Cart
 
-Click the **bag icon** in the header to open the cart slide-out panel and see all added items with product images.
+Click the **bag icon** in the top-right of the chat header to open the cart panel. It shows all added items with product images, colour, and size.
 
 ---
 
@@ -88,11 +129,12 @@ Shopper/
 ├── agent.py            # Claude agent with tool loop
 ├── database.py         # SQLite schema + seed data
 ├── requirements.txt
+├── Procfile            # Railway deployment start command
 ├── shopper.db          # Auto-created on first run
 ├── static/
-│   ├── index.html
-│   ├── styles.css
-│   └── app.js
+│   ├── index.html      # Landing page + chat UI
+│   ├── styles.css      # Light theme, mobile-responsive
+│   └── app.js          # Chat logic, product cards, cart
 ├── Images/             # Product images (PNG)
 │   ├── T-shirts/
 │   ├── Polos/
@@ -107,12 +149,11 @@ Shopper/
 
 ## Resetting the Demo
 
-To start fresh (clear cart and conversation history), restart the server. The database retains seed data across restarts; only the in-memory session store is cleared.
+The cart clears automatically at the start of each session. Conversation history resets on server restart.
 
-To also clear the cart data:
+To fully wipe and re-seed the database:
 
 ```bash
-# Delete and recreate the database
 rm shopper.db
 uvicorn app:app --reload
 ```
