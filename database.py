@@ -102,46 +102,40 @@ def _seed_data(conn):
 
     customers = [
         ("CUST001", "Ryan Mitchell", "ryan@example.com"),
-        ("CUST002", "Bob Smith", "bob@example.com"),
-        ("CUST003", "Charlie Brown", "charlie@example.com"),
-        ("CUST004", "James Parker", "james@example.com"),
+        ("CUST002", "James Parker", "james@example.com"),
     ]
     c.executemany(
         "INSERT OR IGNORE INTO customer_information VALUES (?, ?, ?)", customers
     )
 
-    # Alex: returned Checked Shirt M (too small) → all orders in L (learned M is too small)
-    # Bob: casual buyer, no returns — consistent L
-    # Charlie: returned Jeans L (too big) → all orders in M (learned L is too big)
-    # James: smart-casual, no returns — size M
+    # Ryan: casual buyer, loves black/red — 3 orders all L.
+    #   Returned a Green Checked Shirt in M (too small) → agent cites this when recommending L for shirts.
+    # James: smart-casual, prefers grey/green — 3 orders all M.
+    #   Returned Black Jeans in L (too big) → agent cites this when recommending M for jeans.
     orders = [
-        ("ORD001", "CUST001", json.dumps([{"item": "Plain Shirt", "size": "L", "colour": "Grey"}])),
-        ("ORD002", "CUST001", json.dumps([{"item": "Jeans", "size": "L", "colour": "Black"}])),
-        ("ORD003", "CUST002", json.dumps([{"item": "T-shirt", "size": "L", "colour": "Black"}])),
-        ("ORD004", "CUST002", json.dumps([{"item": "Polo", "size": "L", "colour": "Red"}])),
-        ("ORD005", "CUST003", json.dumps([{"item": "Jeans", "size": "M", "colour": "Black"}])),
-        ("ORD006", "CUST003", json.dumps([{"item": "T-shirt", "size": "M", "colour": "Grey"}])),
-        ("ORD007", "CUST004", json.dumps([{"item": "Polo", "size": "M", "colour": "Green"}])),
-        ("ORD008", "CUST004", json.dumps([{"item": "Jeans", "size": "M", "colour": "Grey"}])),
+        ("ORD001", "CUST001", json.dumps([{"item": "T-shirt",  "size": "L", "colour": "Black"}])),
+        ("ORD002", "CUST001", json.dumps([{"item": "Polo",     "size": "L", "colour": "Red"}])),
+        ("ORD003", "CUST001", json.dumps([{"item": "Jeans",    "size": "L", "colour": "Black"}])),
+        ("ORD004", "CUST002", json.dumps([{"item": "Plain Shirt", "size": "M", "colour": "Grey"}])),
+        ("ORD005", "CUST002", json.dumps([{"item": "Polo",     "size": "M", "colour": "Green"}])),
+        ("ORD006", "CUST002", json.dumps([{"item": "Jeans",    "size": "M", "colour": "Grey"}])),
     ]
     c.executemany(
         "INSERT OR IGNORE INTO customer_orders (order_id, customer_id, items) VALUES (?, ?, ?)",
         orders,
     )
 
-    # Alex returned Checked Shirt M (too small) — he now buys L across the board
-    # Charlie returned Jeans L (too big) — he now buys M across the board
     returns = [
         (
             "RET001",
             "CUST001",
             json.dumps([{"item": "Checked Shirt", "size": "M", "colour": "Green"}]),
-            "Sizing issue — too small. Needed a size up.",
+            "Sizing issue — too small. Needed a size up to L.",
         ),
         (
             "RET002",
-            "CUST003",
-            json.dumps([{"item": "Jeans", "size": "L", "colour": "Grey"}]),
+            "CUST002",
+            json.dumps([{"item": "Jeans", "size": "L", "colour": "Black"}]),
             "Wrong size — too big. Exchanged for size M.",
         ),
     ]

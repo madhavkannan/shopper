@@ -74,6 +74,7 @@ async function beginSession(customerId) {
   // Switch views
   landing.style.display = 'none';
   chatPage.style.display = 'flex';
+  document.body.classList.add('in-chat');
 
   // Show greeting
   appendAgentMessage(data.message);
@@ -85,9 +86,10 @@ async function beginSession(customerId) {
 logoBtn.addEventListener('click', () => {
   chatPage.style.display = 'none';
   landing.style.display = 'flex';
-  // Reset session state (new session will be created on next start)
+  document.body.classList.remove('in-chat');
   sessionId = null;
   currentCustomerId = null;
+  cartCount.textContent = '0';
   setLoading(false);
 });
 

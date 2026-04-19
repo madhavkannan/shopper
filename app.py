@@ -57,6 +57,12 @@ def greet_customer(customer_id: str):
     first_name = row["customer_name"].split()[0]
     session_id = str(uuid.uuid4())
 
+    # Clear cart so every new session starts fresh
+    conn2 = get_connection()
+    conn2.execute("DELETE FROM cart WHERE customer_id = ?", (customer_id,))
+    conn2.commit()
+    conn2.close()
+
     greeting = (
         f"Hi {first_name}! I'm Alex, your personal shopping assistant. "
         f"What are you looking for today? I can help with t-shirts, polos, shirts, and jeans."
