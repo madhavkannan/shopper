@@ -175,6 +175,15 @@ body {
 .start-btn:active:not(:disabled) { transform: scale(0.98); }
 .start-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
+.demo-hint {
+  margin: 10px 0 0;
+  font-size: 0.78rem;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+.demo-hint a { color: var(--text-2); text-decoration: underline; }
+.demo-hint a:hover { color: var(--text); }
+
 /* Mosaic */
 .landing-mosaic {
   display: flex;

@@ -184,13 +184,13 @@ function appendAgentMessage(text, products = [], escalated = false) {
   // Bind Select this buttons
   group.querySelectorAll('.select-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const item  = btn.dataset.item;
-      const colour = btn.dataset.colour;
-      const size  = btn.dataset.size;
+      const item     = btn.dataset.item;
+      const colour   = btn.dataset.colour;
+      const size     = btn.dataset.size;
       const sizeText = size ? ` in size ${size}` : '';
       messageInput.value = `I'd like the ${colour} ${item}${sizeText} please.`;
-      messageInput.focus();
       autoResizeTextarea();
+      sendMessage();
     });
   });
 
