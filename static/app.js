@@ -116,8 +116,21 @@ async function sendMessage() {
     });
     const data = await res.json();
     hideTyping();
-    appendAgentMessage(data.message, data.products, data.escalated, data.cart_updated);
-    if (data.cart_updated) await refreshCartCount();
+
+    if (data.cart_updated && data.cart_item) {
+      // Message 1: cart confirmation as its own bubble
+      const { item, size, colour } = data.cart_item;
+      appendAgentMessage(
+        `Done! I've added the ${colour} ${item} in size ${size} to your cart. Head over whenever you're ready to check out.`
+      );
+      // Message 2: upsell as a separate bubble (may include product image)
+      if (data.message) {
+        appendAgentMessage(data.message, data.products, data.escalated);
+      }
+      await refreshCartCount();
+    } else {
+      appendAgentMessage(data.message, data.products, data.escalated);
+    }
   } catch {
     hideTyping();
     appendAgentMessage('Sorry, I had trouble connecting. Please try again.');
@@ -135,7 +148,7 @@ function appendUserMessage(text) {
   scrollBottom();
 }
 
-function appendAgentMessage(text, products = [], escalated = false, cartUpdated = false) {
+function appendAgentMessage(text, products = [], escalated = false) {
   const group = document.createElement('div');
   group.className = 'message-group assistant';
 
@@ -151,16 +164,6 @@ function appendAgentMessage(text, products = [], escalated = false, cartUpdated 
     html += `<div class="product-cards">`;
     products.forEach(p => { html += renderProductCard(p); });
     html += `</div>`;
-  }
-
-  if (cartUpdated) {
-    html += `
-      <div class="cart-banner">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <polyline points="20 6 9 17 4 12"/>
-        </svg>
-        Added to your cart!
-      </div>`;
   }
 
   if (escalated) {
@@ -196,8 +199,8 @@ function appendAgentMessage(text, products = [], escalated = false, cartUpdated 
 }
 
 function renderProductCard(p) {
-  const imgUrl  = p.image_url || getImageUrl(p.item, p.colour);
-  const sizeLine = p.recommended_size ? `Recommended size: ${p.recommended_size}` : 'Select your size';
+  const imgUrl   = p.image_url || getImageUrl(p.item, p.colour);
+  const metaLine = p.recommended_size ? `${p.colour} · Size ${p.recommended_size}` : p.colour;
   const sizeAttr = p.recommended_size ? `data-size="${p.recommended_size}"` : '';
 
   return `
@@ -205,7 +208,7 @@ function renderProductCard(p) {
       <img src="${imgUrl}" alt="${p.colour} ${p.item}" loading="lazy" />
       <div class="product-card-info">
         <div class="product-card-name">${p.item}</div>
-        <div class="product-card-meta">${p.colour} · ${sizeLine}</div>
+        <div class="product-card-meta">${metaLine}</div>
         <button class="select-btn" data-item="${p.item}" data-colour="${p.colour}" ${sizeAttr}>
           Select this
         </button>

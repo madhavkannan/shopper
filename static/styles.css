@@ -524,22 +524,6 @@ body {
 .select-btn:hover { opacity: 0.75; }
 
 /* Status banners */
-.cart-banner {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  border-radius: 10px;
-  padding: 9px 13px;
-  font-size: 13px;
-  color: #15803d;
-  margin-top: 10px;
-  max-width: 82%;
-}
-
-.cart-banner svg { width: 14px; height: 14px; flex-shrink: 0; }
-
 .escalation-banner {
   display: flex;
   align-items: flex-start;

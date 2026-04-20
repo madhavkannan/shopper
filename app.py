@@ -126,6 +126,7 @@ def chat(request: ChatRequest):
         "products": result["products"],
         "escalated": result["escalated"],
         "cart_updated": result["cart_updated"],
+        "cart_item": result["cart_item"],
     }
 
 
