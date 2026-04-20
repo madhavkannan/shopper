@@ -82,15 +82,18 @@ There are two demo customers, each with a rich purchase and return history that 
 **Flow 1 — Return-driven size recommendation (Ryan)**
 1. Select Ryan Mitchell → Start Shopping
 2. Say: *"I need a new shirt for the office"*
-3. Alex recommends a shirt in L and explicitly mentions the Green Checked Shirt M return as the reason
-4. Confirm the colour and size → item is added to cart
-5. Alex offers one upsell suggestion (e.g. jeans to complete the look) — say *"no thanks"* to see it accepted gracefully
+3. Alex asks about colour preference and narrows down the style
+4. Once colour is agreed, Alex shows the product image
+5. Confirm the item → Alex then asks for size, citing the Green Checked Shirt M return as the reason for recommending L
+6. Confirm size → added to cart
+7. Alex offers one upsell with a product image — say *"no thanks"* to see it accepted gracefully
 
 **Flow 2 — Return-driven size recommendation (James)**
 1. Select James Parker → Start Shopping
 2. Say: *"Looking for a new pair of jeans"*
-3. Alex recommends M and cites the Black Jeans L return unprompted
-4. Confirm → added to cart, then observe the upsell
+3. Alex settles on colour → shows the product image → you confirm
+4. Alex asks for size, citing the Black Jeans L return ("they were too big, so I'd suggest M")
+5. Confirm → added to cart, then observe the upsell with image
 
 **Flow 3 — Colour personalisation (James)**
 1. Select James Parker → Start Shopping
@@ -102,9 +105,9 @@ There are two demo customers, each with a rich purchase and return history that 
 2. Say: *"Something to wear casually — not too formal"*
 3. Alex leads with t-shirts and polos in black/red, matching Ryan's preferences
 
-**Flow 5 — Upsell**
-1. Add any item to the cart
-2. Alex will offer one complementary suggestion (e.g. jeans if you bought a shirt, a polo if you bought jeans)
+**Flow 5 — Upsell with product image**
+1. Add any item to the cart through conversation
+2. Alex offers one complementary suggestion (e.g. jeans if you bought a shirt) with the product image shown inline
 3. Say *"no thanks"* — Alex accepts without pushing further
 
 **Flow 6 — Human escalation**

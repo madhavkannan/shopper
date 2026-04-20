@@ -61,7 +61,7 @@ Five tables: `product_inventory`, `customer_information`, `customer_orders`, `re
 ### Frontend (`static/`)
 
 - `index.html` — shell with header, chat area, input, cart slide-out panel
-- `styles.css` — dark Sierra.ai-inspired theme (near-black backgrounds, blue accents)
+- `styles.css` — light theme (off-white background, white surfaces, near-black text/accents), mobile-responsive
 - `app.js` — fetch-based chat loop; renders messages, product cards, typing indicator, cart panel
 
 Product cards appear inline in the conversation. Clicking "Select this" pre-fills the message input with a natural-language selection string.
